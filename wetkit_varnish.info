@@ -1,0 +1,10 @@
+name = WetKit Varnish
+description = Varnish confiugration to assist in serving cached content.
+package = WetKit
+core = 7.x
+php = 5.2.4
+configure = admin/config/development/varnish
+dependencies[] = expire
+dependencies[] = varnish
+dependencies[] = varnish_dashboard
+dependencies[] = varnish_maintenance_mode

@@ -1,0 +1,44 @@
+<?php
+/**
+ * @file
+ * wetkit_varnish.install
+ */
+
+
+/**
+ * Implementation of hook_requirements().
+ */
+function wetkit_varnish_check_requirements($phase) {
+  $requirements = array();
+
+  // We only run this for the status report
+  if($phase != 'runtime') {
+    return array();
+  }
+
+  $working = wetkit_varnish_check_site();
+
+  $requirements['wetkit_varnish_check'] = array(
+    'title' => t('Reverse proxy status'),
+    'value' => NULL,
+    'description' => $working ? t('Your reverse proxy is serving cached content to anonymous traffic on the homepage.')
+      : t('Your reverse proxy is not serving cached content to anonymous visitors to the home page.'),
+    'severity' => $working ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+  );
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_uninstall()
+ */
+function wetkit_varnish_uninstall() {
+  // Get global variable array.
+  global $conf;
+  foreach (array_keys($conf) as $key) {
+    // Find variables that have the module prefix.
+    if (strpos($key, 'wetkit_varnish_') === 0) {
+      variable_del($key);
+    }
+  }
+}
